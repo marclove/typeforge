@@ -1,5 +1,18 @@
 ## 1.0.0 (2025-08-30)
 
+* feat: add interactive project setup command and improve template bootstrapping ([b63a5a8](https://github.com/marclove/typeforge/commit/b63a5a8))
+* chore: initial commit ([d033ef9](https://github.com/marclove/typeforge/commit/d033ef9))
+* chore(deps): bump actions/checkout from 4 to 5 (#2) ([b7932df](https://github.com/marclove/typeforge/commit/b7932df)), closes [#2](https://github.com/marclove/typeforge/issues/2)
+* chore(deps): bump actions/upload-pages-artifact from 3 to 4 (#1) ([ebf3730](https://github.com/marclove/typeforge/commit/ebf3730)), closes [#1](https://github.com/marclove/typeforge/issues/1)
+* chore(release): 1.0.0 [skip ci] ([8fecf6e](https://github.com/marclove/typeforge/commit/8fecf6e))
+* build: improve test configuration and coverage settings ([f68ca05](https://github.com/marclove/typeforge/commit/f68ca05))
+* ci: improve workflow reliability and enable commit message generation ([3acc89a](https://github.com/marclove/typeforge/commit/3acc89a))
+* ci: replace Just commands with pnpm scripts in GitHub workflows ([d8abc0f](https://github.com/marclove/typeforge/commit/d8abc0f))
+* ci: standardize pnpm setup across GitHub workflows ([d883b4e](https://github.com/marclove/typeforge/commit/d883b4e))
+* fix(ci): handle repositories with fewer than 20 commits in commitlint check ([07b93e6](https://github.com/marclove/typeforge/commit/07b93e6))
+
+## 1.0.0 (2025-08-30)
+
 * build: improve test configuration and coverage settings ([f68ca05](https://github.com/marclove/typeforge/commit/f68ca05))
 * ci: improve workflow reliability and enable commit message generation ([3acc89a](https://github.com/marclove/typeforge/commit/3acc89a))
 * ci: replace Just commands with pnpm scripts in GitHub workflows ([d8abc0f](https://github.com/marclove/typeforge/commit/d8abc0f))
