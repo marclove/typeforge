@@ -78,19 +78,19 @@ jobs:
           fi
 
       - name: Biome format check
-        run: just format-check
+        run: pnpm run format:check
 
       - name: Biome lint
-        run: just lint
+        run: pnpm lint
 
       - name: Type-check
-        run: just typecheck
+        run: pnpm run check
 
       - name: Unit tests
-        run: just test-ci
+        run: pnpm run test:ci
 
       - name: Docs consistency
-        run: just docs-check
+        run: node scripts/check-docs.mjs
 
       - name: Link check (PR)
         if: ${{ github.event_name == 'pull_request' }}
@@ -108,10 +108,10 @@ jobs:
           if-no-files-found: ignore
 
       - name: Build (Node)
-        run: just build
+        run: pnpm build
 
       - name: Build (Vite)
-        run: just build-web
+        run: pnpm run build:web
 
       - name: markdownlint (PR)
         if: ${{ github.event_name == 'pull_request' }}

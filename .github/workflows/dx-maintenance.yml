@@ -37,37 +37,37 @@ jobs:
       - name: Format check
         id: format
         continue-on-error: true
-        run: just format-check | tee dx-report/format.txt
+        run: pnpm run format:check | tee dx-report/format.txt
 
       - name: Lint
         id: lint
         continue-on-error: true
-        run: just lint | tee dx-report/lint.txt
+        run: pnpm lint | tee dx-report/lint.txt
 
       - name: Docs consistency
         id: docscheck
         continue-on-error: true
-        run: just docs-check | tee dx-report/docs-check.txt
+        run: node scripts/check-docs.mjs | tee dx-report/docs-check.txt
 
       - name: Type-check
         id: typecheck
         continue-on-error: true
-        run: just typecheck | tee dx-report/typecheck.txt
+        run: pnpm run check | tee dx-report/typecheck.txt
 
       - name: Tests (CI)
         id: tests
         continue-on-error: true
-        run: just test-ci | tee dx-report/tests.txt
+        run: pnpm run test:ci | tee dx-report/tests.txt
 
       - name: Build (Node)
         id: build
         continue-on-error: true
-        run: just build | tee dx-report/build.txt
+        run: pnpm build | tee dx-report/build.txt
 
       - name: Build (Vite)
         id: buildweb
         continue-on-error: true
-        run: just build-web | tee dx-report/build-web.txt
+        run: pnpm run build:web | tee dx-report/build-web.txt
 
       - name: Outdated deps
         id: outdated
