@@ -30,10 +30,10 @@ pre-push:
     tests:
       run: pnpm test
 
-# prepare-commit-msg:
-#   commands:
-#     generate-message-with-llmc:
-#       run: node scripts/generate-commit-msg.mjs {1} {2} {3}
+prepare-commit-msg:
+  commands:
+    generate-message-with-llmc:
+      run: node scripts/generate-commit-msg.mjs {1} {2} {3}
 
 commit-msg:
   commands:

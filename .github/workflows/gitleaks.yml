@@ -27,6 +27,7 @@ jobs:
           args: detect --source . --redact --report-path gitleaks.sarif --report-format sarif
 
       - name: Upload SARIF to code scanning
+        if: always() && hashFiles('gitleaks.sarif') != ''
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: gitleaks.sarif

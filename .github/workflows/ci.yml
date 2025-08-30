@@ -22,17 +22,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
 
       - name: Install dependencies (frozen)
         run: pnpm install --frozen-lockfile
@@ -109,7 +109,7 @@ jobs:
 
       - name: markdownlint (PR)
         if: ${{ github.event_name == 'pull_request' }}
-        uses: reviewdog/action-markdownlint@v2
+        uses: reviewdog/action-markdownlint@v0.26.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
