@@ -66,7 +66,15 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm exec commitlint --from "${{ github.event.pull_request.base.sha }}" --to "${{ github.sha }}";
           else
-            pnpm exec commitlint --from "HEAD~20" --to "HEAD";
+            # Get the number of commits in the repo
+            COMMIT_COUNT=$(git rev-list --count HEAD)
+            # Use the minimum of 20 or the actual commit count
+            COMMITS_TO_CHECK=$((COMMIT_COUNT < 20 ? COMMIT_COUNT - 1 : 20))
+            if [ $COMMITS_TO_CHECK -gt 0 ]; then
+              pnpm exec commitlint --from "HEAD~$COMMITS_TO_CHECK" --to "HEAD";
+            else
+              echo "Only one commit in repository, skipping commitlint";
+            fi
           fi
 
       - name: Biome format check
