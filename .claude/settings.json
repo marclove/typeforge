@@ -1,0 +1,60 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(just ensure)",
+      "Bash(just start)",
+      "Bash(just dev)",
+      "Bash(just test)",
+      "Bash(just test-ci)",
+      "Bash(just lint)",
+      "Bash(just format-check)",
+      "Bash(just typecheck)",
+      "Bash(just build)",
+      "Bash(just build-web)",
+      "Bash(just ci)",
+      "Bash(just verify)",
+      "Bash(just doctor)",
+      "Bash(just docs-check)",
+      "Bash(just lint-md)",
+      "Bash(just lint-actions)",
+      "Bash(just lint-shell)",
+      "Bash(gh pr view:*)"
+    ],
+    "ask": [
+      "Bash(just clean)",
+      "Bash(just release)",
+      "Bash(just release-dry)",
+      "Bash(just switch-to-zod)",
+      "Bash(CONFIRM=1 just switch-to-zod)",
+      "Bash(just switch-from-zod)",
+      "Bash(just deps-dedupe)",
+      "Bash(just deps-audit)",
+      "Bash(gh auth login:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh gist create:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git worktree:*)",
+      "Bash(just wt-new:*)",
+      "Bash(just wt-remove:*)",
+      "Bash(just wt-exec:*)",
+      "Bash(just wt-dx:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./build)",
+      "Read(./dist)",
+      "Read(./coverage)",
+      "Read(./reports)"
+    ],
+    "defaultMode": "ask"
+  },
+  "includeCoAuthoredBy": false
+}

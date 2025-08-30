@@ -1,0 +1,22 @@
+{
+  "name": "typeforge TS Node",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "24"
+    },
+    "ghcr.io/devcontainers/features/pnpm:2": {
+      "version": "10.15.0"
+    }
+  },
+  "postCreateCommand": "pnpm install",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.defaultFormatter": "biomejs.biome",
+        "editor.formatOnSave": true
+      },
+      "extensions": ["biomejs.biome", "ms-vscode.vscode-typescript-next"]
+    }
+  }
+}

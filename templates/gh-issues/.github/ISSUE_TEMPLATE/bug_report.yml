@@ -1,0 +1,36 @@
+name: Bug report
+description: Report a bug or regression
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? What did you expect?
+      placeholder: Tell us what's wrong.
+    validations:
+      required: true
+  - type: input
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Link to a minimal repro or describe steps.
+      placeholder: https://...
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - server
+        - client
+        - tests
+        - docs
+        - tooling
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Node and pnpm versions (e.g., node 24.x, pnpm 10.15.x)
+      placeholder: node v24.x, pnpm 10.15.x
+

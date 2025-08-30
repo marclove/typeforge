@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x, 24.6.0]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
+      - name: Install dependencies (frozen)
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup reviewdog
+        uses: reviewdog/action-setup@v1
+        if: ${{ github.event_name == 'pull_request' }}
+
+      - name: Biome annotations (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: just lint-rd
+
+      - name: actionlint (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: reviewdog/action-actionlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          filter_mode: diff_context
+
+      - name: shellcheck (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: reviewdog/action-shellcheck@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          filter_mode: diff_context
+
+      - name: Commitlint
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            pnpm exec commitlint --from "${{ github.event.pull_request.base.sha }}" --to "${{ github.sha }}";
+          else
+            pnpm exec commitlint --from "HEAD~20" --to "HEAD";
+          fi
+
+      - name: Biome format check
+        run: just format-check
+
+      - name: Biome lint
+        run: just lint
+
+      - name: Type-check
+        run: just typecheck
+
+      - name: Unit tests
+        run: just test-ci
+
+      - name: Docs consistency
+        run: just docs-check
+
+      - name: Link check (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --no-progress --timeout 20 --max-concurrency 10 README.md AGENTS.md
+          fail: true
+
+      - name: Upload test report (JUnit)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report-${{ matrix.node-version }}
+          path: reports/junit.xml
+          if-no-files-found: ignore
+
+      - name: Build (Node)
+        run: just build
+
+      - name: Build (Vite)
+        run: just build-web
+
+      - name: markdownlint (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: reviewdog/action-markdownlint@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          filter_mode: diff_context

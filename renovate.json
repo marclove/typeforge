@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits", ":automergePatch"],
+  "timezone": "UTC",
+  "schedule": ["after 1am on monday"],
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["after 1am on monday"]
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "minor/patch deps",
+      "automerge": true,
+      "labels": ["deps", "automerge"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "gh-actions weekly",
+      "schedule": ["after 1am on monday"]
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "labels": ["dev-deps"]
+    }
+  ],
+  "pnpm": { "enabled": true }
+}

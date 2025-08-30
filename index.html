@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>typeforge + Vite</title>
+  </head>
+  <body>
+    <main
+      style="
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          sans-serif;
+        margin: 2rem;
+      "
+    >
+      <h1>typeforge</h1>
+      <p>Vite client + Node server. Use the controls below to call API endpoints via the dev proxy.</p>
+      <section style="margin: 1rem 0">
+        <button id="btnHealth">Ping /api/health</button>
+      </section>
+      <section style="margin: 1rem 0">
+        <label for="nameInput">Name:</label>
+        <input id="nameInput" type="text" placeholder="world" />
+        <button id="btnHello">Call /api/hello?name=…</button>
+      </section>
+      <section style="margin: 1rem 0">
+        <h3>Output</h3>
+        <pre id="output">Ready.</pre>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  // Extend defaults; tune line length and code blocks
+  "default": true,
+  "MD013": {
+    "line_length": 120,
+    "code_block_line_length": 200,
+    "ignore_code_blocks": true,
+    "ignore_urls": true
+  },
+  "MD041": { "front_matter_title": "name" },
+  "MD033": { "allowed_elements": ["br"] }
+}

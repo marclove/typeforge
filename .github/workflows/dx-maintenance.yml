@@ -1,0 +1,123 @@
+name: DX Maintenance
+
+on:
+  schedule:
+    - cron: '0 9 * * MON'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  weekly-dx:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.6.0
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
+      - name: Install dependencies (frozen)
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare report dir
+        run: mkdir -p dx-report
+
+      - name: Format check
+        id: format
+        continue-on-error: true
+        run: just format-check | tee dx-report/format.txt
+
+      - name: Lint
+        id: lint
+        continue-on-error: true
+        run: just lint | tee dx-report/lint.txt
+
+      - name: Docs consistency
+        id: docscheck
+        continue-on-error: true
+        run: just docs-check | tee dx-report/docs-check.txt
+
+      - name: Type-check
+        id: typecheck
+        continue-on-error: true
+        run: just typecheck | tee dx-report/typecheck.txt
+
+      - name: Tests (CI)
+        id: tests
+        continue-on-error: true
+        run: just test-ci | tee dx-report/tests.txt
+
+      - name: Build (Node)
+        id: build
+        continue-on-error: true
+        run: just build | tee dx-report/build.txt
+
+      - name: Build (Vite)
+        id: buildweb
+        continue-on-error: true
+        run: just build-web | tee dx-report/build-web.txt
+
+      - name: Outdated deps
+        id: outdated
+        continue-on-error: true
+        run: pnpm outdated | tee dx-report/outdated.txt || true
+
+      - name: Audit (prod)
+        id: audit
+        continue-on-error: true
+        run: pnpm audit --prod | tee dx-report/audit.txt || true
+
+      - name: Knip (unused code)
+        id: knip
+        continue-on-error: true
+        run: pnpm exec knip | tee dx-report/knip.txt || true
+
+      - name: Publish report issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            function read(p){ try { return fs.readFileSync(p,'utf8'); } catch { return ''; } }
+            function section(title, body){
+              const fence = '```';
+              // Limit to ~400 lines per section for readability
+              const lines = body.split(/\r?\n/).slice(0, 400).join('\n');
+              return `\n### ${title}\n${fence}\n${lines}\n${fence}\n`;
+            }
+            const report = [
+              section('Format Check', read('dx-report/format.txt')),
+              section('Lint', read('dx-report/lint.txt')),
+              section('Docs Consistency', read('dx-report/docs-check.txt')),
+              section('Type-check', read('dx-report/typecheck.txt')),
+              section('Tests (CI)', read('dx-report/tests.txt')),
+              section('Build (Node)', read('dx-report/build.txt')),
+              section('Build (Vite)', read('dx-report/build-web.txt')),
+              section('Outdated Dependencies', read('dx-report/outdated.txt')),
+              section('Security Audit (prod)', read('dx-report/audit.txt')),
+              section('Knip (Unused Code)', read('dx-report/knip.txt')),
+            ].join('\n');
+            const date = new Date().toISOString().slice(0,10);
+            const title = `DX Maintenance Report (${date})`;
+            const body = `Automated weekly DX maintenance report.\n\n${report}\n\n_Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}_`;
+            // Create a new issue labeled 'dx-maintenance'
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              labels: ['dx-maintenance']
+            });

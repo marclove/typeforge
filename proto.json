@@ -1,0 +1,7 @@
+{
+  "$schema": "https://moonrepo.dev/schemas/proto.json",
+  "tools": {
+    "node": "24.6.0",
+    "pnpm": "10.15.0"
+  }
+}

@@ -1,0 +1,41 @@
+pre-commit:
+  parallel: false
+  commands:
+    toolchain:
+      run: node scripts/ensure-toolchain.mjs
+    # 1) Autofix: Biome format + lint fixes on staged files, then stage changes
+    biome-format-write:
+      glob: "*.{ts,tsx,js,jsx,json,cjs,mjs,cts,mts}"
+      run: pnpm exec biome format --write {staged_files} && git add {staged_files}
+    biome-fix:
+      glob: "*.{ts,tsx,js,jsx,json,cjs,mjs,cts,mts}"
+      run: pnpm exec biome check --write {staged_files} && git add {staged_files}
+    shfmt-fix:
+      glob: "*.sh"
+      run: |
+        if command -v shfmt >/dev/null 2>&1; then shfmt -w -s {staged_files}; git add {staged_files}; else echo "[pre-commit] shfmt not found"; fi
+    biome-format-check:
+      glob: "*.{ts,tsx,js,jsx,json,cjs,mjs,cts,mts}"
+      run: pnpm exec biome format {staged_files}
+    biome-lint:
+      glob: "*.{ts,tsx,js,jsx,cts,mts}"
+      run: pnpm exec biome lint {staged_files}
+
+pre-push:
+  commands:
+    toolchain:
+      run: node scripts/ensure-toolchain.mjs
+    typecheck:
+      run: pnpm check
+    tests:
+      run: pnpm test
+
+# prepare-commit-msg:
+#   commands:
+#     generate-message-with-llmc:
+#       run: node scripts/generate-commit-msg.mjs {1} {2} {3}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm exec commitlint --edit {1}
