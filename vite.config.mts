@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 function gitignorePatterns(rootDir: string): string[] {
   const file = path.join(rootDir, ".gitignore");
@@ -59,17 +59,35 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["tests/**/*.test.ts"],
+    exclude: ["node_modules/**", "templates/**", "dist/**", "coverage/**"],
     reporters: process.env.CI
       ? ["dot", ["junit", { outputFile: "reports/junit.xml" }]]
       : ["default"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
+      exclude: [
+        "node_modules/**",
+        "dist/**",
+        "coverage/**",
+        "**/*.d.ts",
+        "**/*.config.{js,ts,mjs,cjs,mts}",
+        "scripts/**/*.mjs",
+        "templates/**",
+        ".github/**",
+        "**/*.mjs",
+        "**/vite.config.mts",
+        "**/.remarkrc.mjs",
+        "src/index.ts",
+        "src/main.ts",
+        "src/env.ts",
+        "src/shared/types.ts",
+      ],
       thresholds: {
-        lines: 80,
-        functions: 80,
-        branches: 80,
-        statements: 80,
+        lines: 90,
+        functions: 90,
+        branches: 90,
+        statements: 90,
       },
     },
   },
