@@ -32,7 +32,7 @@ for (const line of just.split(/\r?\n/)) {
     justAliases.set(aliasMatch[1], aliasMatch[2]);
     continue;
   }
-  const recipeMatch = line.match(/^([A-Za-z0-9:_-]+):\s*$/);
+  const recipeMatch = line.match(/^([A-Za-z0-9:_-]+)(?:\s+[^:]*)?:\s*$/);
   if (recipeMatch) justRecipes.add(recipeMatch[1]);
 }
 // Include aliases as valid commands
@@ -52,8 +52,28 @@ const justCmds = codeTicks
   .filter(Boolean)
   .map((m) => m[1]);
 
+// Built-in pnpm commands that don't need to be in package.json
+const builtinPnpmCommands = new Set([
+  "install",
+  "add",
+  "remove",
+  "update",
+  "outdated",
+  "audit",
+  "dedupe",
+  "dlx",
+  "exec",
+  "run",
+  "start",
+  "test",
+  "publish",
+  "pack",
+  "lefthook",
+  "approve-builds",
+]);
+
 for (const s of pnpmCmds) {
-  if (!pnpmScripts.has(s))
+  if (!pnpmScripts.has(s) && !builtinPnpmCommands.has(s))
     errors.push(`README/AGENTS references pnpm script '${s}' which is not defined in package.json`);
 }
 

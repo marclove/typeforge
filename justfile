@@ -32,6 +32,30 @@ init:
     if [ -f .env.example ] && [ ! -f .env ]; then cp .env.example .env; fi
     pnpm install
 
+# Setup new project from template (interactive)
+setup:
+    #!/usr/bin/env zsh
+    echo "🚀 Setting up your new project from typeforge template"
+    echo
+    read "slug?Enter your GitHub repository (owner/repo): "
+    read "name?Enter your package name: "
+    read "desc?Enter project description (optional): "
+    echo
+    echo "Preview changes:"
+    node scripts/bootstrap.mjs --dry-run --slug "$slug" --name "$name" ${desc:+--description "$desc"}
+    echo
+    read "confirm?Apply these changes? [y/N]: "
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        APPLY=1 node scripts/bootstrap.mjs --slug "$slug" --name "$name" ${desc:+--description "$desc"}
+        echo "✅ Project setup complete!"
+        echo "💡 Next steps:"
+        echo "   1. Review and commit the changes"
+        echo "   2. Push to your repository"
+        echo "   3. Configure any secrets needed for CI/CD"
+    else
+        echo "❌ Setup cancelled"
+    fi
+
 # Start dev (server + client)
 start:
     just ensure

@@ -1,7 +1,7 @@
 # typeforge
 
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/OWNER/REPO?display_name=tag\&color=blue)](https://github.com/OWNER/REPO/releases)
+[![CI](https://github.com/marclove/typeforge/actions/workflows/ci.yml/badge.svg)](https://github.com/marclove/typeforge/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/marclove/typeforge?display_name=tag\&color=blue)](https://github.com/marclove/typeforge/releases)
 
 TypeScript Node starter with Vite (optional web entry), Vitest, Biome, pnpm, proto, Lefthook, semantic-release, and
 GitHub Actions.
@@ -184,8 +184,6 @@ See `AGENTS.md` for contributor guidelines.
 - Project slash commands: `docs/SLASH_COMMANDS.md`
 - Template engine and built‑ins: `docs/TEMPLATES.md`
 - Release process: `docs/RELEASES.md`
-
-Note: Replace `OWNER/REPO` in the badges with your GitHub slug after pushing.
 
 ## Troubleshooting
 

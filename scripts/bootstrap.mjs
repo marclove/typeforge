@@ -20,6 +20,11 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv);
+// Override dry-run if APPLY=1 is set
+if (process.env.APPLY === "1") {
+  args.dryRun = false;
+}
+
 if (!args.slug || !args.name) {
   die(
     "Usage: bootstrap --slug <owner/repo> --name <package-name> [--description <text>] [--dry-run]",
@@ -67,8 +72,13 @@ updateJSON("package.json", (pkg) => {
   return pkg;
 });
 
-// README badges OWNER/REPO replacement
-updateText("README.md", (s) => s.replaceAll("OWNER/REPO", args.slug));
+// README badges: replace template repo or placeholder with new slug
+updateText("README.md", (s) => {
+  // First normalize: replace template repo with placeholder if present
+  const normalized = s.replaceAll("marclove/typeforge", "OWNER/REPO");
+  // Then replace placeholder with actual repo
+  return normalized.replaceAll("OWNER/REPO", args.slug);
+});
 
 // Output plan
 if (changes.length === 0) {
