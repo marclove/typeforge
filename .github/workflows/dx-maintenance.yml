@@ -85,7 +85,7 @@ jobs:
         run: pnpm exec knip | tee dx-report/knip.txt || true
 
       - name: Publish report issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
