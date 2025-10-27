@@ -101,7 +101,7 @@ jobs:
 
       - name: Upload test report (JUnit)
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: junit-report-${{ matrix.node-version }}
           path: reports/junit.xml
